@@ -11,3 +11,7 @@ pre-commit run -a
 # Create new directories
 New-Item -ItemType Directory dataset -ErrorAction Ignore
 New-Item -ItemType Directory saved_model -ErrorAction Ignore
+
+# Train and infer model
+python train.py
+python infer.py
