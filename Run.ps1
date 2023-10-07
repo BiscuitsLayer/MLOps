@@ -1,4 +1,5 @@
 # Activate env
+python -m venv .
 ./Scripts/Activate.ps1
 
 # Install requirements

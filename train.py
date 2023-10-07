@@ -6,7 +6,7 @@ from torchvision.datasets import MNIST
 import src.mnist_model as mnist_model
 import src.tools as tools
 
-LOAD_MODEL_FROM_FILE = True
+LOAD_MODEL_FROM_FILE = False
 BATCH_SIZE = 128
 EPOCHS_COUNT = 5
 LEARNING_RATE = 1e-3
