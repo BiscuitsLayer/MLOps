@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import src.tools as tools
+import mnist.src.tools as tools
 
 INPUT_SIZE = 28 * 28
 NUM_CLASSES = 10
