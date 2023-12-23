@@ -19,7 +19,7 @@ class Train:
         Run model train on MNIST dataset
         """
         mnist_dataset = MNIST(
-            root="dataset/", download=True, transform=transforms.ToTensor()
+            root="dataset/", download=False, transform=transforms.ToTensor()
         )
         train_data, validation_data = tools.split_data(mnist_dataset)
         train_loader = DataLoader(train_data, BATCH_SIZE, shuffle=True)
@@ -27,12 +27,12 @@ class Train:
 
         model = mnist_model.MNISTModel()
         if LOAD_MODEL_FROM_FILE:
-            model.load_state_dict(torch.load("saved_model/mnist.pth"))
+            model.load_state_dict(torch.load("model/mnist.pth"))
             print("Model loaded from file successfully!")
 
         _ = tools.fit(EPOCHS_COUNT, LEARNING_RATE, model, train_loader, val_loader)
 
-        torch.save(model.state_dict(), "saved_model/mnist.pth")
+        torch.save(model.state_dict(), "model/mnist.pth")
 
 
 def main():

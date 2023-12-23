@@ -4,12 +4,10 @@ Lib/
 Scripts/
 share/
 
-# MNIST data
-dataset/
-saved_model/
-
 # Configs
 pyvenv.cfg
 
 # Cached files
 __pycache__/
+/dataset
+/model

@@ -1,0 +1,5 @@
+[core]
+    remote = mnist_storage
+['remote "mnist_storage"']
+    url = gdrive://1p5zVQvGrKbzV_qQGtzVK3IV1WcAvFCcz
+    gdrive_acknowledge_abuse = true

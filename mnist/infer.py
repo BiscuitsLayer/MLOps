@@ -22,7 +22,7 @@ class Infer:
         val_loader = DataLoader(validation_data, BATCH_SIZE, shuffle=False)
 
         model = mnist_model.MNISTModel()
-        model.load_state_dict(torch.load("saved_model/mnist.pth"))
+        model.load_state_dict(torch.load("model/mnist.pth"))
         print("Model loaded from file successfully!")
 
         result = tools.evaluate(model, val_loader)
