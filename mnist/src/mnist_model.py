@@ -15,10 +15,12 @@ class MNISTModel(nn.Module):
         self.num_classes = NUM_CLASSES
         self.loss_function = F.cross_entropy
         self.linear = nn.Linear(self.input_size, self.num_classes)
+        self.activation = nn.ReLU(inplace=True)
 
     def forward(self, xb):
         xb = xb.reshape(-1, self.input_size)
         out = self.linear(xb)
+        out = self.activation(out)
         return out
 
     def training_step(self, batch):

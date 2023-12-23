@@ -22,16 +22,8 @@ Invoke-Call -ScriptBlock { ./Scripts/Activate.ps1 } -ErrorAction Ignore
 # Install requirements (using poetry, it should be preinstalled)
 Invoke-Call -ScriptBlock { poetry install } -ErrorAction Stop
 
-# Linter checks (using pre-commit)
+# Install linter properties (using pre-commit)
 Invoke-Call -ScriptBlock { pre-commit install } -ErrorAction Stop
-Invoke-Call -ScriptBlock { pre-commit run -a } -ErrorAction Stop
-
-# Create new directories
-New-Item -ItemType Directory dataset -ErrorAction Ignore
-New-Item -ItemType Directory model -ErrorAction Ignore
-
-# Pull dataset from Google Drive using DVC
-Invoke-Call -ScriptBlock { dvc pull } -ErrorAction Stop
 
 # Train and infer model (using fire)
 Invoke-Call -ScriptBlock { poetry run mnist_train run_train } -ErrorAction Stop
