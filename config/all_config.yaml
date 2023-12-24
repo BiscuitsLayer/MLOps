@@ -1,0 +1,15 @@
+model:
+    path: model/
+    pretrained_model_file: mnist_pretrained.pth
+    new_model_file: mnist_new.pth
+    input_size: 784
+    num_classes: 10
+
+dataset:
+    path: dataset/
+    batch_size: 10
+
+train:
+    load_from_file: True
+    epoch_count: 5
+    learning_rate: 1e-3

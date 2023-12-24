@@ -1,11 +1,12 @@
 # Virtual environment
-Include/
-Lib/
-Scripts/
-share/
+/Include/
+/Lib/
+/Scripts/
+/share/
 
 # Configs
 pyvenv.cfg
+/outputs/
 
 # Cached files
 __pycache__/

@@ -4,15 +4,12 @@ import torch.nn.functional as F
 
 import mnist.src.tools as tools
 
-INPUT_SIZE = 28 * 28
-NUM_CLASSES = 10
-
 
 class MNISTModel(nn.Module):
-    def __init__(self):
+    def __init__(self, input_size: int, num_classes: int):
         super().__init__()
-        self.input_size = INPUT_SIZE
-        self.num_classes = NUM_CLASSES
+        self.input_size = input_size
+        self.num_classes = num_classes
         self.loss_function = F.cross_entropy
         self.linear = nn.Linear(self.input_size, self.num_classes)
         self.activation = nn.ReLU(inplace=True)
