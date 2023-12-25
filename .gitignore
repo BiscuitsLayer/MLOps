@@ -8,6 +8,9 @@
 pyvenv.cfg
 /outputs/
 
+# Logs
+/lightning_logs/
+
 # Cached files
 __pycache__/
 /dataset

@@ -1,17 +1,14 @@
 import os
 
 import fire
+import lightning.pytorch as pl
 import torch
-import torchvision.transforms as transforms
 from dvc.repo import Repo
-from torch.utils.data import DataLoader
-from torchvision.datasets import MNIST
-
-import mnist.src.mnist_model as mnist_model
-import mnist.src.tools as tools
 
 # Import parsed configs
 from config.config_handler import all_config
+from mnist.src.data import MNISTDatamodule
+from mnist.src.model import MNISTModel
 
 
 class Train:
@@ -29,22 +26,9 @@ class Train:
         """
         Run model train on MNIST dataset
         """
-        mnist_dataset = MNIST(
-            root=self.config.dataset.path,
-            download=False,
-            transform=transforms.ToTensor(),
-        )
-        train_data, validation_data = tools.split_data(mnist_dataset)
-        train_loader = DataLoader(
-            train_data, self.config.dataset.batch_size, shuffle=True
-        )
-        val_loader = DataLoader(
-            validation_data, self.config.dataset.batch_size, shuffle=True
-        )
+        datamodule = MNISTDatamodule(self.config)
+        model = MNISTModel(self.config)
 
-        model = mnist_model.MNISTModel(
-            self.config.model.input_size, self.config.model.num_classes
-        )
         if self.config.train.load_from_file:
             model.load_state_dict(
                 torch.load(
@@ -55,13 +39,15 @@ class Train:
                 f"Loaded from {self.config.model.pretrained_model_file} successfully!"
             )
 
-        _ = tools.fit(
-            self.config.train.epoch_count,
-            self.config.train.learning_rate,
-            model,
-            train_loader,
-            val_loader,
-        )
+        # loggers = [
+        #         pl.loggers.MLFlowLogger(
+        #         experiment_name=cfg.artifacts.experiment_name,
+        #         tracking_uri="file:./.logs/my-mlflow-logs",
+        #     ),
+        # ]
+
+        trainer = pl.Trainer(max_epochs=self.config.train.epoch_count)
+        trainer.fit(model=model, datamodule=datamodule)
 
         torch.save(
             model.state_dict(),

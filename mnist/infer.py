@@ -1,17 +1,14 @@
 import os
 
 import fire
+import lightning.pytorch as pl
 import torch
-import torchvision.transforms as transforms
 from dvc.repo import Repo
-from torch.utils.data import DataLoader
-from torchvision.datasets import MNIST
-
-import mnist.src.mnist_model as mnist_model
-import mnist.src.tools as tools
 
 # Import parsed configs
 from config.config_handler import all_config
+from mnist.src.data import MNISTDatamodule
+from mnist.src.model import MNISTModel
 
 
 class Infer:
@@ -29,19 +26,9 @@ class Infer:
         """
         Run inference on some batch from MNIST dataset
         """
-        mnist_dataset = MNIST(
-            root=self.config.dataset.path,
-            download=False,
-            transform=transforms.ToTensor(),
-        )
-        _, validation_data = tools.split_data(mnist_dataset)
-        val_loader = DataLoader(
-            validation_data, self.config.dataset.batch_size, shuffle=True
-        )
+        datamodule = MNISTDatamodule(self.config)
+        model = MNISTModel(self.config)
 
-        model = mnist_model.MNISTModel(
-            self.config.model.input_size, self.config.model.num_classes
-        )
         model.load_state_dict(
             torch.load(
                 f"{self.config.model.path}/{self.config.model.pretrained_model_file}"
@@ -49,8 +36,8 @@ class Infer:
         )
         print(f"Loaded from {self.config.model.pretrained_model_file} successfully!")
 
-        result = tools.evaluate(model, val_loader)
-        print(result)
+        trainer = pl.Trainer(max_epochs=self.config.train.epoch_count)
+        trainer.validate(model=model, datamodule=datamodule)
 
 
 def main():
