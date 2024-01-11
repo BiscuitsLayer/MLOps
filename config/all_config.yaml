@@ -12,7 +12,7 @@ dataset:
 
 train:
     load_from_file: True
-    epoch_count: 5
+    epoch_count: 1
     learning_rate: 1e-3
     accelerator: gpu
 

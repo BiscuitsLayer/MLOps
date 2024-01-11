@@ -59,3 +59,31 @@ class MNISTModel(pl.LightningModule):
             self.parameters(), lr=self.config.train.learning_rate
         )
         return {"optimizer": optimizer}
+
+
+def onnx_converter(all_config, model: MNISTModel):
+    onnx_model_path = f"{all_config.model.path}/{all_config.model.pretrained_model_file.split('.')[0]}.onnx"
+
+    # module = MNISTModel.load_from_checkpoint(
+    #     f"{all_config.model.path}/{all_config.model.pretrained_model_file}"
+    # )
+    # model = module.model
+    model.cuda()
+    model.eval()
+
+    dummy_input = torch.randn(1, all_config.model.input_size).to("cuda")
+
+    torch.onnx.export(
+        model,
+        dummy_input,
+        onnx_model_path,
+        export_params=True,
+        opset_version=15,
+        do_constant_folding=True,
+        input_names=["IMAGES"],
+        output_names=["POSITIVE_CLASS_PROB"],
+        dynamic_axes={
+            "IMAGES": {0: "BATCH_SIZE"},
+            "POSITIVE_CLASS_PROB": {0: "BATCH_SIZE"},
+        },
+    )

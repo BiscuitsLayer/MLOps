@@ -8,7 +8,7 @@ from dvc.repo import Repo
 # Import parsed configs
 from config.config_handler import all_config
 from mnist.src.data import MNISTDatamodule
-from mnist.src.model import MNISTModel
+from mnist.src.model import MNISTModel, onnx_converter
 
 
 class Train:
@@ -72,15 +72,15 @@ class Train:
             max_epochs=self.config.train.epoch_count,
             logger=loggers,
             callbacks=callbacks,
-            log_every_n_steps=1,
         )
         trainer.fit(model=model, datamodule=datamodule)
 
-        torch.save(
-            model.state_dict(),
-            f"{self.config.model.path}/{self.config.model.new_model_file}",
-        )
-        print(f"Model saved to {self.config.model.new_model_file} successfully!")
+        # torch.save(
+        #     model.state_dict(),
+        #     f"{self.config.model.path}/{self.config.model.new_model_file}",
+        # )
+        # print(f"Model saved to {self.config.model.new_model_file} successfully!")
+        onnx_converter(self.config, model)
 
 
 def main():
