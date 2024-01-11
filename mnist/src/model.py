@@ -20,7 +20,7 @@ class MNISTModel(pl.LightningModule):
         self.num_classes = self.config.model.num_classes
         self.loss_function = F.cross_entropy
         self.linear = nn.Linear(self.input_size, self.num_classes)
-        self.activation = nn.Sigmoid()
+        self.activation = nn.ReLU(inplace=True)
 
     def forward(self, xb):
         xb = xb.reshape(-1, self.input_size)
@@ -45,8 +45,8 @@ class MNISTModel(pl.LightningModule):
         out_labels = out.cpu().argmax(1)
         loss = self.loss_function(out, labels)
 
-        precision = precision_score(true_labels, out_labels, average="macro")
-        recall = recall_score(true_labels, out_labels, average="macro")
+        precision = precision_score(true_labels, out_labels, average="micro")
+        recall = recall_score(true_labels, out_labels, average="micro")
 
         self.log("val_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
         self.log("precision", precision, on_step=True, on_epoch=True, prog_bar=False)
