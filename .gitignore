@@ -10,6 +10,7 @@ pyvenv.cfg
 
 # Logs
 /lightning_logs/
+/.logs/
 
 # Cached files
 __pycache__/

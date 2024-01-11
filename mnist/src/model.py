@@ -20,7 +20,7 @@ class MNISTModel(pl.LightningModule):
         self.num_classes = self.config.model.num_classes
         self.loss_function = F.cross_entropy
         self.linear = nn.Linear(self.input_size, self.num_classes)
-        self.activation = nn.ReLU(inplace=True)
+        self.activation = nn.Sigmoid()
 
     def forward(self, xb):
         xb = xb.reshape(-1, self.input_size)
@@ -32,19 +32,26 @@ class MNISTModel(pl.LightningModule):
         images, labels = batch
         out = self(images)
         loss = self.loss_function(out, labels)
+
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
+
         return {"loss": loss}
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         images, labels = batch
         out = self(images)
-        out_labels = out.argmax(1)
+
+        true_labels = labels.cpu()
+        out_labels = out.cpu().argmax(1)
         loss = self.loss_function(out, labels)
 
-        precision = precision_score(labels, out_labels, average="micro")
-        recall = recall_score(labels, out_labels, average="micro")
+        precision = precision_score(true_labels, out_labels, average="macro")
+        recall = recall_score(true_labels, out_labels, average="macro")
 
         self.log("val_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
+        self.log("precision", precision, on_step=True, on_epoch=True, prog_bar=False)
+        self.log("recall", recall, on_step=True, on_epoch=True, prog_bar=False)
+
         return {"val_loss": loss, "precision": precision, "recall": recall}
 
     def configure_optimizers(self):

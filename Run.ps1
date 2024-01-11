@@ -27,4 +27,4 @@ Invoke-Call -ScriptBlock { pre-commit install } -ErrorAction Stop
 
 # Train and infer model (using fire)
 Invoke-Call -ScriptBlock { poetry run mnist_train run_train } -ErrorAction Stop
-# Invoke-Call -ScriptBlock { poetry run mnist_infer run_infer } -ErrorAction Stop
+Invoke-Call -ScriptBlock { poetry run mnist_infer run_infer } -ErrorAction Stop

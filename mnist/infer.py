@@ -13,6 +13,7 @@ from mnist.src.model import MNISTModel
 
 class Infer:
     def __init__(self):
+        torch.set_float32_matmul_precision("medium")
         self.config = all_config
 
         if not os.path.isdir(self.config.dataset.path) or not os.path.isdir(
